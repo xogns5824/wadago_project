@@ -1,0 +1,86 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<style>
+		img {
+			width: 250px;
+			height: 250px;
+			margin: auto;
+		}
+
+		.result {
+			font-size: x-large;
+			font-weight: 900;
+		}
+
+		.resultBtn {
+			width: 300px;
+			height: 50px;
+			border: none;
+			padding: 10px;
+			color: white;
+			border-radius: 50px;
+			background-color: rgb(0, 128, 255);
+			margin: 20px;
+		}
+
+		.imgList {
+			border-radius: 20px;
+			display: flex;
+			text-align: center;
+			padding: 20px;
+		}
+
+		.imgItem {
+
+			border: none;
+			margin: 20px;
+			text-align: center;
+			margin: auto;
+		}
+	</style>
+	<script>
+		window.onload = function () {
+			if (!window.location.hash) {
+				window.location = window.location + '#loaded';
+				window.location.reload(true);
+			}
+		}
+	</script>
+</head>
+
+<body>
+	<header th:insert="header_nav.html"></header>
+	<div class="container">
+		<center>
+			<h1 style="color:white;">모델 분석 결과</h1>
+			<div class="imgList">
+				<div class="imgItem"><img th:src="@{/img/{img}(img=${count}+'.jpg')}" loading="lazy" alt="Test Image"
+						class="NO-CACHE">
+				</div>
+				<div class="imgItem"><span><svg style="width:100px; height:100px;" xmlns="http://www.w3.org/2000/svg"
+							width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+							<path fill-rule="evenodd"
+								d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+						</svg></span></div>
+				<div class="imgItem"><img th:src="@{/img/meta/{img}(img=${label}+'.png')}" loading="lazy"
+						alt="Meta Image" class="NO-CACHE"></div>
+			</div>
+			<span class="result" id="resultText">결과 : [[${result}]]</span>
+			<form th:action="@{imgResult}" method="post" name="update">
+				<p class="input-group" hidden>
+					<input name="img_num" type="number" class="form-control" th:value="${count}">
+					<input name="user" type="text" class="form-control" th:value="${session.memVo.id}">
+					<input name="grade" type="number" class="form-control" value="0">
+					<input name="img_name" type="text" class="form-control" th:value="${count}+'.jpg'">
+					<input name="description" type="text" class="form-control" th:value="${result}">
+				</p>
+				<button class="resultBtn" type="submit">
+					결과 값 저장하기
+				</button>
+			</form>
+		</center>
+</body>
+
+</html>

@@ -1,0 +1,96 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+</head>
+
+<body>
+	<header th:insert="header_nav.html"></header>
+	<br>
+	<div id="wrapper">
+		<div id="content">
+			<h4>Wadago 회원가입</h4>
+			<br>
+			<form action="/mem/signup" method="post" name="signup">
+				<div>
+					<h5 class="join_title">
+						<label for="id">아이디</label>
+					</h5>
+					<div>
+						<span class="box int_id">
+							<input type="text" id="id" name="id" class="int" maxlength="20">
+						</span>
+					</div>
+					<span class="error_next_box"></span>
+				</div>
+				<br>
+				<div>
+					<h5 class="join_title"><label for="pswd1">비밀번호</label></h5>
+					<span class="box int_pass">
+						<input type="password" id="pswd1" name="pw" class="int" maxlength="20">
+						<span id="alertTxt">사용불가</span>
+					</span>
+					<span class="error_next_box"></span>
+				</div>
+				<br>
+				<div>
+					<h5 class="join_title"><label for="pswd2">비밀번호 재확인</label></h5>
+					<span class="box int_pass_check">
+						<input type="password" id="pswd2" class="int" maxlength="20">
+					</span>
+					<span class="error_next_box"></span>
+				</div>
+				<br>
+				<div>
+					<h5 class="join_title"><label for="name">이름</label></h5>
+					<span class="box">
+						<input type="text" id="name" name="name" class="int" maxlength="20">
+					</span>
+					<span class="error_next_box"></span>
+				</div>
+				<br>
+				<div>
+					<h5 class="join_title"><label>생년월일</label></h5>
+					<span class="box">
+						<input type="date" name="birth" class="int" value="1997-01-01" pattern="yyyy-mm-dd">
+					</span>
+					<span class="error_next_box"></span>
+				</div>
+				<br>
+				<div>
+					<h5 class="join_title"><label for="phoneNo">휴대전화</label></h5>
+					<span class="box">
+						<input type="tel" id="mobile" name="phone" class="int" maxlength="16"
+							placeholder="(-)는 생략하고 입력해주세요">
+					</span>
+					<span class="error_next_box"></span>
+				</div>
+				<br>
+				<div>
+					<h5 class="join_title"><label for="email">이메일</label></h5>
+					<span class="box">
+						<input type="text" id="email" name="email" class="int" maxlength="100" placeholder="선택입력">
+					</span>
+					<span class="error_next_box">이메일 주소를 다시 확인해주세요.</span>
+				</div>
+				<br>
+				<div class="btn_area">
+					<button type="submit" class="btnJoin_false" id="btnJoin" disabled>
+						가입 양식을 확인하세요.
+					</button>
+				</div>
+				<div>
+					<span class="box" hidden>
+						<select name="grade">
+							<option value="1" selected>일반 회원</option>
+					</span>
+				</div>
+
+			</form>
+		</div>
+	</div>
+
+	<script src="/js/signup.js"></script>
+</body>
+
+</html>

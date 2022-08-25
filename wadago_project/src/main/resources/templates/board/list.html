@@ -1,0 +1,41 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+</head>
+
+<body style="background-image: url('/img/list.png'); ">
+	<header th:insert="header_nav.html"></header>
+	<div class="container">
+		<h1 style="color: white;">Q&A</h1>
+		<button style="float:right" type="button" onclick="location.href='/board/question'"
+			class="btn btn-primary btn-sm">질문 작성</button>
+		<table class="table">
+			<thead>
+				<th>질문 내용</th>
+				<th>작성자</th>
+				<th>작성 시간</th>
+				<th>답변</th>
+			</thead>
+			<tbody>
+				<tr th:each="qs:${question}">
+					<td th:text="${qs.contents}"></td>
+					<td th:text="${qs.writer}"></td>
+					<td th:text="${#dates.format(qs.postTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+					<td><a th:href="@{/board/modify(board_num=${qs.board_num})}"
+							style="text-decoration:none;">답변([[${qs.replyCount}]])</a></td>
+				</tr>
+			</tbody>
+		</table>
+		<div th:with="totalPages=${question.totalPages}, 
+						nowPage=${question.number+1}, 
+						hasNext=${question.hasNext}, 
+						hasPrev=${question.hasPrevious},
+						startPage=${((nowPage-3)<=0)?1:nowPage-3},
+						endPage=${((nowPage+3)>=totalPages)?totalPages:nowPage+3}">
+			<br><br>
+			<nav th:insert="/pagination.html"> </nav>
+		</div>
+</body>
+
+</html>

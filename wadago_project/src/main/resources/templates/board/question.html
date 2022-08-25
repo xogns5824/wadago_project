@@ -1,0 +1,31 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+</head>
+
+<body style="background-image: url('/img/question.png');">
+	<header th:insert="header_nav.html"></header>
+	<div class="container">
+		<h1>질문 작성</h1>
+		<form th:action="@{insertQuestion}" method="post" name="update">
+			<div class="question">
+				<p class="input-group" hidden>
+					<label class="input-group-text">글번호</label>
+					<input name="board_num" type="number" class="form-control" th:value="${count}+1">
+				</p>
+				<p class="input-group">
+					<label class="input-group-text">작성자</label>
+					<input name="writer" type="text" class="form-control" th:value="${session.memVo.id}" readonly>
+				</p>
+				<p class="input-group">
+					<label class="input-group-text">질문 내용</label>
+					<input name="contents" type="text" class="form-control">
+				</p>
+				<button class="btn btn-primary" type="submit" style="float:right">질문 등록</button>
+			</div>
+		</form>
+	</div>
+</body>
+
+</html>

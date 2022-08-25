@@ -1,0 +1,72 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<style>
+		#agreeBtn {
+			margin: 10px;
+			padding: 10px;
+			width: 100px;
+			background-color: rgb(49, 152, 255);
+			color: white;
+			border: none;
+			border-radius: 50px;
+			font-size: larger;
+
+		}
+
+		#denyBtn {
+			margin: 10px;
+			padding: 10px;
+			width: 100px;
+			background-color: red;
+			color: white;
+			border: none;
+			border-radius: 50px;
+			font-size: larger;
+		}
+	</style>
+</head>
+
+<body>
+	<header th:insert="header_nav.html"></header>
+	<div class="container" th:each="modify:${img}">
+		<h1 style="color:white;">사진상세</h1>
+		<div class="image-show" id="image-show"></div>
+		<form th:action="@{updateGrade}" method="post" name="update">
+			<p class="input-group" hidden>
+				<input name="img_num" type="number" class="form-control" th:value="${modify.img_num}" readonly>
+				<input name="user" type="text" class="form-control" th:value="${modify.user}" readonly>
+				<input name="img_name" type="text" class="form-control" th:value="${modify.img_name}" readonly>
+				<input name="post_time" type="text" class="form-control" th:value="${modify.postTime}" readonly>
+				<input name="grade" class="form-control" id="selection" th:value="${modify.grade}">
+				<input name="description" type="text" class="form-control" th:value="${modify.description}" readonly>
+
+			</p>
+			<center><img style="width:290px; height: 290px;" th:src="@{/img/{img}(img=${modify.img_name})}"
+					loading="lazy"> </center>
+			<br>
+			<center>
+				<h1> 결과 : [[${modify.description}]]</h1>
+			</center>
+			<center>
+				<button type="submit" onclick="agreeImg()" id="agreeBtn">승인</button>
+				<button type="submit" onclick="denyImg()" id="denyBtn">거부</button>
+			</center>
+		</form>
+	</div>
+	<script>
+		var agree = document.querySelector('#agreeBtn');
+		var deny = document.querySelector('#denyBtn');
+		var selection = document.querySelector('#selection');
+
+		function agreeImg() {
+			selection.value = 1;
+		}
+		function denyImg() {
+			selection.value = 2;
+		}
+	</script>
+</body>
+
+</html>

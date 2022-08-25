@@ -1,0 +1,204 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<style>
+		.pagination-div {
+			user-select: none;
+			align-content: center;
+			position: absolute;
+			width: 100%;
+			text-align: center;
+		}
+
+		.pagination-div span {
+			border-radius: 3px;
+			border: 1px solid #999;
+			padding: 5px;
+			margin: 10px 0px 0px 10px;
+			display: inline-block;
+		}
+
+		.button {
+			border-radius: 3px;
+			border: 1px solid #999;
+			padding: 5px;
+			margin: 10px;
+			display: inline-block;
+		}
+	</style>
+</head>
+
+<body style="background-image: url('/img/Management.png'); ">
+	<header th:insert="header_nav.html"></header>
+	<div class="container">
+		<h1 style="color: white;">멤버관리</h1>
+		<div class="tab-content" id="nav-tabContent">
+			<button style="float:right" type="button" onclick="memberDelete()"
+				class="btn btn-primary btn-sm button">삭제</button>
+			<button style="float:right" type="button" onclick="memberUpdate()"
+				class="btn btn-primary btn-sm button">수정</button><br>
+			<table class="table">
+				<thead>
+					<th>
+						<input type="checkbox" id="allCheckBox" class="chk" th:onclick="allChecked()">
+					</th>
+					<th>번호</th>
+					<th>아이디</th>
+					<th>비밀번호</th>
+					<th>이름</th>
+					<th>폰번호</th>
+					<th>이메일</th>
+					<th>생일</th>
+					<th>가입날짜</th>
+					<th>등급</th>
+				</thead>
+				<tbody>
+					<tr th:each="memList:${page}">
+						<td>
+							<input type="checkbox" class="chk" name="cchk" th:onclick="cchkClicked()"
+								th:value="${memList.id}">
+						</td>
+						<td class="memList1"></td>
+						<td class="mem" th:text="${memList.id}"></td>
+						<td class="mem" th:text="${memList.pw}"></td>
+						<td class="mem" th:text="${memList.name}"></td>
+						<td class="mem" th:text="${memList.phone}"></td>
+						<td class="mem" th:text="${memList.email}"></td>
+						<td class="mem" th:text="${memList.birth}"></td>
+						<td class="mem" th:text="${memList.signup_time}"></td>
+						<td class="mem" th:text="${memList.grade}"></td>
+					</tr>
+				</tbody>
+			</table>
+			<div th:with="totalPages=${page.totalPages}, 
+						nowPage=${page.number+1}, 
+						hasNext=${page.hasNext}, 
+						hasPrev=${page.hasPrevious},
+						startPage=${((nowPage-3)<=0)?1:nowPage-3},
+						endPage=${((nowPage+3)>=totalPages)?totalPages:nowPage+3}">
+				<nav th:insert="/pagination.html"> </nav>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+	function memList1(start) {
+		var start = start;
+		var td_list = document.getElementsByClassName("memList1");
+		for (var i = 0; i < td_list.length; i++) {
+			start++;
+			td_list[i].innerHTML = "&nbsp" + start;
+			if (start == 20) {
+				start = 0;
+			}
+		}
+	};
+
+	memList1(0);
+
+	//체크박스 전체 선택 클릭 이벤트
+	function allChecked() {
+		var isAllChecked = document.getElementById("allCheckBox").checked;
+		var isChecked = document.getElementsByName("cchk");
+
+		for (i in isChecked) {
+			// 전체 체크되어 있으면 
+			if (isAllChecked == true) {
+				isChecked[i].checked = true;
+			} else {
+				isChecked[i].checked = false;
+			}
+		}
+	}
+
+	//자식 체크박스 클릭 이벤트
+	function cchkClicked() {
+		var isAllChecked = document.getElementById("allCheckBox");
+		var allCount = document.getElementsByName("cchk").length;       //체크박스 전체개수
+		var checkedCount = 0;                                               //체크된 체크박스 전체개수
+		var isChecked = document.getElementsByName("cchk");
+
+		for (i in isChecked) {
+			if (isChecked[i].checked == true) {
+				checkedCount = checkedCount + 1;
+			}
+		}
+
+		//체크박스 전체개수와 체크된 체크박스 전체개수가 같으면 체크박스 전체 체크
+		if (allCount == checkedCount) {
+			isAllChecked.checked = true;
+		} else {
+			isAllChecked.checked = false;
+		}
+	}
+
+	function memberDelete() {
+		var isChecked = document.getElementsByName("cchk");
+		var memberIdArray = [];
+		for (i in isChecked) {
+			if (isChecked[i].checked == true) {
+				memberIdArray.push(isChecked[i].value);
+			}
+		}
+
+		if (memberIdArray.length == 0) {
+			alert("삭제할 항목을 선택해주세요.");
+			return false;
+		}
+
+		var confirmAlert = confirm('정말로 삭제하시겠습니까?');
+
+		if (confirmAlert) {
+			$.ajax({
+				url: "/mem/memberDelete"
+				, type: 'post'
+				, traditional: true
+				, data: {
+					memberIdArray: memberIdArray
+				}
+				, success: function (jdata) {
+
+					if (jdata != "") {
+						alert("해당 멤버가 정상적으로 삭제되었습니다.");
+						location.href = "/mem/memberManagement/1";
+
+					} else {
+						alert("해당 멤버 삭제를 실패헀습니다.");
+					}
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					alert("ERROR : " + textStatus + " : " + errorThrown);
+				}
+			})
+		}
+	}
+
+	function memberUpdate() {
+		var isChecked = document.getElementsByName("cchk");
+		var memberIdArray = [];
+		for (i in isChecked) {
+			if (isChecked[i].checked == true) {
+				memberIdArray.push(isChecked[i].value);
+			}
+		}
+
+		if (memberIdArray.length == 0) {
+			alert("수정할 항목을 하나만 선택해주세요.");
+			return false;
+		} else if (memberIdArray.length > 1) {
+			alert("수정할 항목을 하나만 선택해주세요.");
+			return false;
+		}
+
+		var confirmAlert = confirm('정말로 수정하시겠습니까?');
+
+		if (confirmAlert) {
+
+			location.href = "/mem/memberUpdate?id=" + memberIdArray;
+		}
+	}
+</script>
+
+</html>

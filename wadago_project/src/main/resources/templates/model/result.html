@@ -1,0 +1,41 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+</head>
+
+<body style="background-image: url('/img/result.png'); ">
+	<header th:insert="header_nav.html"></header>
+	<div class="container">
+		<h1 style="color:white;">사용자들의 모델 사용 결과</h1>
+		<table class="table" style="color:white;">
+			<thead>
+				<th>사진 게시자</th>
+				<th>사진</th>
+				<th>게시 시간</th>
+				<th>결과</th>
+			</thead>
+			<tbody>
+				<tr th:each="im:${result}" th:if="${im.grade==1}">
+					<td th:text="${im.user}"></td>
+					<td>
+						<img style="width: 50px; height: 50px;" th:src="@{/img/{img}(img=${im.img_name})}"
+							loading="lazy">
+					</td>
+					<td th:text="${#dates.format(im.postTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+					<td th:text="${im.description}"></td>
+				</tr>
+			</tbody>
+		</table>
+		<div th:with="totalPages=${result.totalPages}, 
+						nowPage=${result.number+1}, 
+						hasNext=${result.hasNext}, 
+						hasPrev=${result.hasPrevious},
+						startPage=${((nowPage-3)<=0)?1:nowPage-3},
+						endPage=${((nowPage+3)>=totalPages)?totalPages:nowPage+3}">
+			<nav th:insert="/pagination.html"> </nav>
+		</div>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,132 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<style>
+		.question {
+			background-color: rgb(192, 192, 192);
+			padding: 30px;
+			border-radius: 20px;
+		}
+
+		.qs_contents {
+
+			background-color: aliceblue;
+			border-radius: 10px;
+			height: 80px;
+			padding: 10px;
+		}
+
+		#del_btn {
+			float: right;
+			margin: 10px;
+		}
+
+		.reply {
+			background-color: rgb(192, 192, 192);
+			padding: 10px;
+			margin: 10px;
+			border-radius: 20px;
+		}
+	</style>
+</head>
+
+<body style="background-image: url('/img/modify.png'); ">
+	<header th:insert="header_nav.html"></header>
+	<div th:each="modify:${question}" class="container">
+		<h1>질문 사항</h1>
+		<div class="question">
+			<div id="board_num" hidden>[[${modify.board_num}]] </div>
+			<p class="input-group">
+				<label class="input-group-text">작성자</label>
+				<input name="writer" type="text" class="form-control" th:value="${modify.writer}" readonly>
+				<label class="input-group-text">작성 시간</label>
+				<input name="post_time" type="text" class="form-control" th:value="${modify.postTime}" readonly>
+			</p>
+			<label>질문 내용</label>
+			<div class="qs_contents" name="contents" th:text="${modify.contents}"></div>
+		</div>
+		<button id="del_btn" type="button"
+			th:onclick="'location.href=\''+@{/board/reply(board_num=${modify.board_num})} +'\''" class="btn btn-primary"
+			th:if="${session.memVo} and ${session.memVo.grade == 0}">답변 작성</button>
+		<button type="button" class="btn btn-danger" id="del_btn" th:onclick="questionDelete();"
+			th:if="${session.memVo} and ${session.memVo.grade == 0}">질문 삭제</button>
+		<br><br><br>
+		<hr>
+		<h2>관리자 답변</h2>
+		<div class="reply" th:each="rp:${reply}">
+			<div id="comment_num" hidden>[[${rp.comment_num}]]</div>
+			<!--<button type="button" class="btn btn-danger btn-sm" id="del_btn" th:onclick="replyDelete();" th:if="${session.memVo} and ${session.memVo.grade == 0}">X</button>-->
+			<p class="input-group">
+				<label class="input-group-text">답변자</label>
+				<input name="writer" type="text" class="form-control" th:value="${rp.writer}" readonly>
+				<label class="input-group-text">답변 시간</label>
+				<input id="post_time" name="post_time" type="text" class="form-control" th:value="${rp.post_time}"
+					readonly>
+			</p>
+			<label>답변 내용</label>
+			<div class="qs_contents" name="contents" type="text" th:text="${rp.contents}"></div>
+			<br>
+		</div>
+	</div>
+	<script>
+		function questionDelete() {
+			var board_num = document.querySelector('#board_num').innerHTML;
+			var confirmAlert = confirm('정말로 삭제하시겠습니까?');
+			if (confirmAlert) {
+				$.ajax({
+					url: "/board/boardDelete"
+					, type: 'POST'
+					, traditional: true
+					, data: {
+						board_num: board_num
+					}
+					, success: function (jdata) {
+
+						if (jdata != "") {
+							alert("해당 질문이 정상적으로 삭제되었습니다.");
+							location.href = "/board/list/1";
+
+						} else {
+							alert("해당 질문 삭제를 실패헀습니다.");
+						}
+					},
+					error: function (jqXHR, textStatus, errorThrown) {
+						alert("ERROR : " + textStatus + " : " + errorThrown);
+					}
+				})
+			}
+		}
+		function replyDelete() {
+			var comment_num = document.querySelector('#comment_num').innerHTML;
+
+			var confirmAlert = confirm('댓글을 정말로 삭제하시겠습니까?');
+			if (confirmAlert) {
+				$.ajax({
+					url: "/board/replyDelete"
+					, type: 'POST'
+					, traditional: true
+					, data: {
+						comment_num: comment_num
+					}
+					, success: function (jdata) {
+
+						if (jdata != "") {
+							alert("해당 댓글이 정상적으로 삭제되었습니다.");
+							location.href = "/board/list/1";
+
+						} else {
+							alert("해당 댓글를 실패헀습니다.");
+						}
+					},
+					error: function (jqXHR, textStatus, errorThrown) {
+						alert("ERROR : " + textStatus + " : " + errorThrown);
+					}
+				})
+			}
+		}
+	</script>
+</body>
+
+</html>

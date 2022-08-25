@@ -1,0 +1,47 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+</head>
+
+<body style="background-image: url('/img/img.png'); ">
+	<header th:insert="header_nav.html"></header>
+	<div class="container">
+		<h1 style="color: white;">Q&A</h1>
+		<table class="table" style="color:black;">
+			<thead style="border:3px solid black;">
+				<th>사진 게시자</th>
+				<th>사진 이름</th>
+				<th>사진</th>
+				<th>게시 시간</th>
+				<th>승인 여부</th>
+				<th>사진 승인 관리</th>
+			</thead>
+			<tbody style="border:3px solid black;">
+				<tr th:each="im:${img}" th:if="${im.grade==0}">
+					<td th:text="${im.user}"></td>
+					<td th:text="${im.img_name}"></td>
+					<td>
+						<img style="width: 50px; height: 50px;" th:src="@{/img/{img}(img=${im.img_name})}"
+							loading="lazy">
+					</td>
+					<td th:text="${#dates.format(im.postTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+					<td th:text="${im.grade}"></td>
+					<td><a th:href="@{/mem/imgModify(img_num=${im.img_num})}" style="text-decoration:none;">관리</a></td>
+				</tr>
+			</tbody>
+		</table>
+		<div th:with="totalPages=${result.totalPages}, 
+							nowPage=${result.number+1}, 
+							hasNext=${result.hasNext}, 
+							hasPrev=${result.hasPrevious},
+							startPage=${((nowPage-3)<=0)?1:nowPage-3},
+							endPage=${((nowPage+3)>=totalPages)?totalPages:nowPage+3	
+							}
+							">
+			<nav th:insert="/pagination.html"></nav>
+		</div>
+	</div>
+</body>
+
+</html>

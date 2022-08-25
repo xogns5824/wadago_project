@@ -1,0 +1,365 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<style>
+		html {
+			height: 100%;
+		}
+
+		body {
+			margin: 0;
+			height: 100%;
+		}
+
+		#header {
+			padding-top: 62px;
+			padding-bottom: 20px;
+			text-align: center;
+		}
+
+		#wrapper {
+			position: relative;
+			height: 100%;
+		}
+
+		#content {
+			position: absolute;
+			left: 50%;
+			transform: translate(-50%);
+			width: 460px;
+		}
+
+		input:focus {
+			outline: none;
+		}
+
+		h5 {
+			margin: 19px 0 8px;
+			font-size: 14px;
+			font-weight: 700;
+		}
+
+		.box {
+			display: block;
+			width: 100%;
+			height: 51px;
+			border: solid 1px #dadada;
+			padding: 10px 14px 10px 14px;
+			box-sizing: border-box;
+			background: #fff;
+			position: relative;
+			border-radius: 50px;
+		}
+
+		.int {
+			display: block;
+			position: relative;
+			width: 100%;
+			height: 29px;
+			border: none;
+			background: #fff;
+			font-size: 15px;
+		}
+
+		.box.int_id {
+			padding-right: 110px;
+		}
+
+		.box.int_pass {
+			padding-right: 40px;
+		}
+
+		.box.int_pass_check {
+			padding-right: 40px;
+		}
+
+		#bir_wrap {
+			display: table;
+			width: 100%;
+		}
+
+		#bir_yy {
+			display: table-cell;
+			width: 147px;
+
+		}
+
+		#bir_mm {
+			display: table-cell;
+			width: 147px;
+			vertical-align: middle;
+		}
+
+		#bir_dd {
+			display: table-cell;
+			width: 147px;
+		}
+
+		#bir_mm,
+		#bir_dd {
+			padding-left: 10px;
+		}
+
+		select {
+			width: 100%;
+			height: 29px;
+			font-size: 15px;
+			background: #fff;
+			background-size: 20px 8px;
+			-webkit-appearance: none;
+			display: inline-block;
+			text-align: start;
+			border: none;
+			cursor: default;
+		}
+
+		.error_next_box {
+			margin-top: 9px;
+			font-size: 12px;
+			color: red;
+			display: none;
+		}
+
+		#alertTxt {
+			position: absolute;
+			top: 19px;
+			right: 38px;
+			font-size: 12px;
+			color: red;
+			display: none;
+		}
+
+		.btn_area {
+			margin: 50px 0 91px;
+		}
+
+		#btnJoin {
+			width: 100%;
+			padding: 21px 0 17px;
+			border: 0;
+			cursor: pointer;
+			color: #fff;
+			background-color: rgb(255, 128, 0);
+			border-radius: 50px;
+			font-size: 20px;
+			font-weight: 400;
+
+		}
+	</style>
+</head>
+
+<body>
+	<header th:insert="header_nav.html"></header>
+	<br>
+	<div id="wrapper">
+		<div id="content">
+			<form action="/mem/memberUpdate" method="post" name="signup" th:onsubmit="return updateCk()">
+				<div>
+					<h5 class="join_title">
+						<label for="id">아이디</label>
+					</h5>
+					<span class="box int_id">
+						<input type="text" class="int" maxlength="20" th:value="${member.id}" disabled="disabled">
+						<input type="hidden" id="id" name="id" th:value="${member.id}">
+					</span>
+					<span class="error_next_box"></span>
+				</div>
+				<br>
+				<div>
+					<h5 class="join_title"><label for="pswd1">비밀번호</label></h5>
+					<span class="box int_pass">
+						<input type="text" id="pswd1" name="pw" class="int" maxlength="20" th:value="${member.pw}">
+						<span id="alertTxt">사용불가</span>
+
+					</span>
+					<span class="error_next_box"></span>
+				</div>
+				<br>
+				<div>
+					<h5 class="join_title"><label for="name">이름</label></h5>
+					<span class="box int_name">
+						<input type="text" id="name" name="name" class="int" maxlength="20" th:value="${member.name}">
+					</span>
+					<span class="error_next_box"></span>
+				</div>
+				<br>
+				<div>
+					<h5 class="join_title"><label>생년월일</label></h5>
+					<span class="box">
+						<input type="date" id="birth" name="birth" class="int" pattern="yyyy-MM-dd"
+							th:value="${member.birth}">
+						<input type="hidden" id="birth1" th:value="${member.birth}">
+					</span>
+					<span class="error_next_box"></span>
+				</div>
+				<br>
+				<div>
+					<h5 class="join_title"><label for="phoneNo">휴대전화</label></h5>
+					<span class="box int_mobile">
+						<input type="tel" id="mobile" name="phone" class="int" maxlength="11"
+							placeholder="(-)는 생략하고 입력해주세요" th:value="${member.phone}">
+					</span>
+					<span class="error_next_box"></span>
+				</div>
+				<br>
+				<div>
+					<h5 class="join_title"><label for="email">이메일</label></h5>
+					<span class="box int_email">
+						<input type="text" id="email" name="email" class="int" maxlength="100" placeholder="선택입력"
+							th:value="${member.email}">
+					</span>
+					<span class="error_next_box">이메일 주소를 다시 확인해주세요.</span>
+				</div>
+
+				<div class="btn_area">
+					<button type="submit" id="btnJoin">
+						<span>수정하기</span>
+					</button>
+				</div>
+				<div>
+					<span class="box" hidden>
+						<select name="grade">
+							<option value="1" selected>일반 회원</option>
+					</span>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<script>
+		var pw1 = document.querySelector('#pswd1');
+		var pwMsg = document.querySelector('#alertTxt');
+		var userName = document.querySelector('#name');
+		var email = document.querySelector('#email');
+		var mobile = document.querySelector('#mobile');
+		var error = document.querySelectorAll('.error_next_box');
+
+		phoneFormat();
+		birthFormat();
+
+		function checkPw() {
+			var pwPattern = /[a-zA-Z0-9~!@#$%^&*()_+|<>?:{}]{8,16}/;
+			if (pw1.value === "") {
+				error[1].innerHTML = "필수 정보입니다.";
+				error[1].style.display = "block";
+				pwMsg.style.color = "red";
+
+				return false;
+			} else if (!pwPattern.test(pw1.value)) {
+				error[1].innerHTML = "8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.";
+				pwMsg.innerHTML = "사용불가";
+				pwMsg.style.paddingRight = "93px";
+				error[1].style.display = "block";
+				pwMsg.style.display = "block";
+				pwMsg.style.color = "red";
+
+				return false;
+			} else {
+				error[1].style.display = "none";
+				pwMsg.innerHTML = "사용가능";
+				pwMsg.style.display = "block";
+				pwMsg.style.color = "#03c75a";
+				return true;
+			}
+		}
+
+		function checkName() {
+			var namePattern = /[a-zA-Z가-힣]/;
+			if (userName.value === "") {
+				error[2].innerHTML = "필수 정보입니다.";
+				error[2].style.color = "red";
+				error[2].style.display = "block";
+
+				return false;
+			} else if (!namePattern.test(userName.value) || userName.value.indexOf(" ") > -1) {
+				error[2].innerHTML = "이름을 정확히 입력하세요.(공백 사용 불가)";
+				error[2].style.color = "red";
+				error[2].style.display = "block";
+
+				return false;
+			} else {
+				error[2].style.display = "none";
+				userName.innerHTML = "사용가능";
+				userName.style.display = "block";
+				userName.style.color = "#03c75a";
+				return true;
+			}
+		}
+
+		function checkPhoneNum() {
+			var isPhoneNum = /([01]{2})([01679]{1})([0-9]{3,4})([0-9]{4})/;
+
+			if (mobile.value === "") {
+				error[4].innerHTML = "필수 정보입니다.";
+				error[4].style.display = "block";
+				error[4].style.color = "red";
+
+				return false;
+			} else if (!isPhoneNum.test(mobile.value)) {
+				error[4].innerHTML = "형식에 맞지 않는 번호입니다.";
+				error[4].style.color = "red";
+				error[4].style.display = "block";
+
+				return false;
+			} else {
+				error[4].style.display = "none";
+				mobile.innerHTML = "사용가능";
+				mobile.style.display = "block";
+				mobile.style.color = "#03c75a";
+				return true;
+			}
+		}
+
+		function isEmailCorrect() {
+			var emailPattern = /[a-z0-9]{2,}@[a-z0-9-]{2,}\.[a-z0-9]{2,}/;
+
+			if (email.value === "") {
+				error[5].innerHTML = "필수 정보입니다.";
+				error[5].style.display = "block";
+				error[5].style.color = "red";
+
+				return false;
+			} else if (!emailPattern.test(email.value)) {
+				error[5].innerHTML = "양식에 맞게 작성해주세요.";
+				error[5].style.display = "block";
+				error[5].style.color = "red";
+
+				return false;
+			} else {
+				error[5].style.display = "none";
+				email.innerHTML = "사용가능";
+				email.style.display = "block";
+				email.style.color = "#03c75a";
+				return true;
+			}
+		}
+
+		function phoneFormat() {
+			var format = document.querySelector('#mobile').value;
+			var str = format.substr(0, 3) + format.substr(3, 4) + format.substr(7, 4);
+			document.querySelector('#mobile').value = str;
+		}
+
+		function birthFormat() {
+			var format = document.querySelector('#birth1').value;
+			var str = format.substr(0, 10);
+
+			document.querySelector('#birth').value = str;
+		}
+
+		function updateCk() {
+
+			if (checkPw() == true && checkName() == true && isEmailCorrect() == true && checkPhoneNum() == true) {
+				return true;
+			} else {
+				return false;
+			}
+
+			return false;
+		}
+
+	</script>
+</body>
+
+</html>

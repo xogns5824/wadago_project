@@ -1,0 +1,37 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+</head>
+
+<body style="background-image: url('/img/reply.png'); ">
+	<header th:insert="header_nav.html"></header>
+	<div class="container">
+		<h1>답변 작성</h1>
+		<form th:action="@{insertReply}" method="post" name="update">
+			<p class="input-group" hidden>
+				<label class="input-group-text">답변 번호</label>
+				<input name="comment_num" type="number" class="form-control" th:value="${count}+1">
+			</p>
+			<p class="input-group">
+				<label class="input-group-text">작성자</label>
+				<input name="writer" type="text" class="form-control" th:value="${session.memVo.id}" readonly>
+			</p>
+			<p class="input-group">
+				<label class="input-group-text">답변 내용</label>
+				<input name="contents" type="text" class="form-control">
+			</p>
+			<p class="input-group" hidden>
+				<label class="input-group-text">해당 질문</label>
+				<input name="board_num" type="number" class="form-control" th:value="${num}" readonly>
+			</p>
+			<p class="input-group" hidden>
+				<label class="input-group-text">댓글 카운드</label>
+				<input name="count" type="number" class="form-control" value="0" readonly>
+			</p>
+			<button class="btn btn-outline-primary" type="submit">답변 등록</button>
+		</form>
+	</div>
+</body>
+
+</html>

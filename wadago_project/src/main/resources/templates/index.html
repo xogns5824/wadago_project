@@ -1,0 +1,115 @@
+<html lang="ko" xmlns:th="http:/www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		.background-wrap {
+			display: flex;
+			justify-content: default(flex-start);
+			align-items: stretch(default);
+		}
+
+		.content {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.content span {
+			color: white;
+			position: relative;
+			animation: anime_textup 1.5s infinite;
+		}
+
+		.s1 {
+			text-shadow: 10px 8px 10px gray;
+		}
+
+		.s2 {
+			text-shadow: 10px 10px 10px gray;
+		}
+
+		@keyframes anime_textup {
+			0% {
+				top: 0;
+			}
+
+			20% {
+				top: -0.2rem;
+			}
+
+			40% {
+				top: 0
+			}
+
+			60% {
+				top: 0
+			}
+
+			80% {
+				top: 0
+			}
+
+			100% {
+				top: 0
+			}
+		}
+
+
+		.content span:nth-child(1) {
+			font-size: 120px;
+			font-weight: bold;
+			animation: slide 2s ease-out;
+			animation-delay: .2s;
+
+		}
+
+		.content span:nth-child(2) {
+			font-size: 30px;
+			animation: slide 2s ease-out;
+			animation-delay: .2s;
+		}
+
+		@keyframes slide {
+			from {
+				left: -100px;
+				opacity: 0;
+			}
+
+			to {
+				left: 400px;
+				opacity: 1;
+			}
+		}
+
+		@keyframes disappear {
+			from {
+				left: 400px;
+				opacity: 1;
+			}
+
+			to {
+				left: -100px;
+				opacity: 0;
+			}
+		}
+	</style>
+</head>
+
+<body style="background-image: url('/img/index.png'); ">
+	<header th:insert="header_nav.html"></header>
+	<div class=":container">
+		<div class="text-on-img">
+			<div class="background-wrap">
+				<div class="content">
+					<span id="s1" class="s1">WADAGO</span>
+					<span class="s2">Big Data Platform Based<br>AI Convergence Service</span>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
